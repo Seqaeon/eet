@@ -2918,12 +2918,12 @@ class EarlyExitGPT(GPT):
             research += sum(p.numel() for p in self.aux_head.parameters())
 
         scalars = self.resid_lambdas.numel() + self.x0_lambdas.numel()
-        if self.depth_decay_raw is not None:
+        if getattr(self, 'depth_decay_raw', None) is not None:
             scalars += self.depth_decay_raw.numel()
-        if self.residual_mix_gamma is not None:
+        if getattr(self, 'residual_mix_gamma', None) is not None:
             for gamma_p in self.residual_mix_gamma:
                 scalars += gamma_p.numel()
-        if self.residual_mixers is not None:
+        if getattr(self, 'residual_mixers', None) is not None:
             for mixer in self.residual_mixers:
                 scalars += sum(p.numel() for p in mixer.parameters())
 
