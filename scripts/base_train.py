@@ -1004,14 +1004,7 @@ def build_model_meta(depth):
 model = build_model_meta(args.depth) # 1) Build on meta device (only shapes/dtypes, no data)
 model_config = model.config
 model_config_kwargs = asdict(model_config)
-# Clean up legacy parameters for clean EET logging and checkpointing
-model_config_kwargs = {
-    k: v for k, v in model_config_kwargs.items()
-    if k.startswith('eet_') or k in {
-        'sequence_len', 'vocab_size', 'n_layer', 'n_head', 'n_kv_head', 
-        'n_embd', 'dropout', 'use_pos_embed', 'window_pattern', 'use_eet'
-    }
-}
+
 print0(f"Model config:\n{json.dumps(model_config_kwargs, indent=2)}")
 model.to_empty(device=device) # 2) All tensors get storage on target device but with uninitialized (garbage) data
 model.init_weights() # 3) All tensors get initialized
