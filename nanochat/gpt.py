@@ -829,3 +829,10 @@ class GPT(nn.Module):
                 next_token = torch.multinomial(probs, num_samples=1, generator=rng)
             ids = torch.cat([ids, next_token], dim=1)
         return ids[0].tolist()
+
+# Compatibility placeholders to prevent import errors in legacy scripts
+class RemixedLinear: pass
+class DualGateLinear: pass
+class CausalKernelLinear: pass
+class ModulationDiagnostics: pass
+
