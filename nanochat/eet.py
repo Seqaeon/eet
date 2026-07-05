@@ -2914,7 +2914,7 @@ class EarlyExitGPT(GPT):
         research = 0
         if self.embedding_model is not None:
             research += sum(p.numel() for p in self.embedding_model.parameters())
-        if self.aux_head is not None:
+        if getattr(self, 'aux_head', None) is not None:
             research += sum(p.numel() for p in self.aux_head.parameters())
 
         scalars = self.resid_lambdas.numel() + self.x0_lambdas.numel()
