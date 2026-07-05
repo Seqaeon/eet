@@ -646,6 +646,21 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 #    "Diagnostic: Dense baseline (control)" \
 #    --use-eet 0
 
+run_experiment "EET_P1_DIAG_EET_NEVER_EXIT_D${DEPTH}" \
+    "Diagnostic: EET never exit (dense behavior control)" \
+    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
+    --eet-router-type mlp1 \
+    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
+    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
+    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
+    --eet-global-router 1 --eet-router-task-grad 1 \
+    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1 \
+    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
+    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 1.0 \
+    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
+    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
+    --eet-capacity-alignment-lambda 1.0
+
 run_experiment "EET_P1_DIAG_EET_D${DEPTH}" \
     "Diagnostic: EET baseline (P1_22 config)" \
     --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
@@ -660,6 +675,7 @@ run_experiment "EET_P1_DIAG_EET_D${DEPTH}" \
     --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
     --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
     --eet-capacity-alignment-lambda 1.0
+
 
 # ============================================================================
 # DIAGNOSTIC-GUIDED FIXES
@@ -779,7 +795,7 @@ run_experiment "EET_P1_DIAG_EET_D${DEPTH}" \
 #    --eet-detach-exit-from-backbone 1
 
 # Run diagnostic comparison if both completed
-DENSE_CKPT="${EET_OUT_BASE}/EET_P1_DIAG_DENSE_D${DEPTH}/depth_${DEPTH}/ckpt_base/base"
+DENSE_CKPT="${EET_OUT_BASE}/EET_P1_DIAG_EET_NEVER_EXIT_D${DEPTH}/depth_${DEPTH}/ckpt_base/base"
 EET_CKPT="${EET_OUT_BASE}/EET_P1_DIAG_EET_D${DEPTH}/depth_${DEPTH}/ckpt_base/base"
 DIAG_OUT="${EET_OUT_BASE}/diagnostic_D${DEPTH}"
 
