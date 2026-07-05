@@ -664,60 +664,60 @@ run_experiment "EET_P1_DIAG_EET_D${DEPTH}" \
 # ============================================================================
 # DIAGNOSTIC-GUIDED FIXES
 # ============================================================================
-
+#
 # Option A: Depth-Scaled LR — deeper layers get higher LR to compensate for
 # fewer surviving tokens providing gradient signal
-run_experiment "EET_P1_DEPTH_LR_D${DEPTH}" \
-    "Diagnostic fix: depth-scaled LR (Option A)" \
-    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
-    --eet-router-type mlp1 \
-    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
-    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
-    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
-    --eet-global-router 1 --eet-router-task-grad 1 \
-    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
-    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
-    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
-    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
-    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
-    --eet-capacity-alignment-lambda 1.0 \
-    --eet-depth-lr-scale 1
-
+#run_experiment "EET_P1_DEPTH_LR_D${DEPTH}" \
+#    "Diagnostic fix: depth-scaled LR (Option A)" \
+#    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
+#    --eet-router-type mlp1 \
+#    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
+#    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
+#    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
+#    --eet-global-router 1 --eet-router-task-grad 1 \
+#    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
+#    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
+#    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
+#    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
+#    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
+#    --eet-capacity-alignment-lambda 1.0 \
+#    --eet-depth-lr-scale 1
+#
 # Option B: Depth Gradient Scaling — scale per-token CE loss by inverse of
 # active fraction at the token's exit layer
-run_experiment "EET_P1_GRAD_SCALE_D${DEPTH}" \
-    "Diagnostic fix: depth gradient scaling (Option B)" \
-    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
-    --eet-router-type mlp1 \
-    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
-    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
-    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
-    --eet-global-router 1 --eet-router-task-grad 1 \
-    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
-    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
-    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
-    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
-    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
-    --eet-capacity-alignment-lambda 1.0 \
-    --eet-depth-grad-scale 1
-
+#run_experiment "EET_P1_GRAD_SCALE_D${DEPTH}" \
+#    "Diagnostic fix: depth gradient scaling (Option B)" \
+#    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
+#    --eet-router-type mlp1 \
+#    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
+#    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
+#    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
+#    --eet-global-router 1 --eet-router-task-grad 1 \
+#    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
+#    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
+#    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
+#    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
+#    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
+#    --eet-capacity-alignment-lambda 1.0 \
+#    --eet-depth-grad-scale 1
+#
 # Detach Aux: Stop CE-guided and surprise loss from flowing gradients into
 # transformer blocks — only the router params get trained by aux losses
-run_experiment "EET_P1_DETACH_AUX_D${DEPTH}" \
-    "Diagnostic fix: detach aux losses from backbone" \
-    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
-    --eet-router-type mlp1 \
-    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
-    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
-    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
-    --eet-global-router 1 --eet-router-task-grad 1 \
-    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
-    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
-    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
-    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
-    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
-    --eet-capacity-alignment-lambda 1.0 \
-    --eet-detach-aux-from-backbone 1
+#run_experiment "EET_P1_DETACH_AUX_D${DEPTH}" \
+#    "Diagnostic fix: detach aux losses from backbone" \
+#    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
+#    --eet-router-type mlp1 \
+#    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
+#    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
+#    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
+#    --eet-global-router 1 --eet-router-task-grad 1 \
+#    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
+#    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
+#    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
+#    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
+#    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
+#    --eet-capacity-alignment-lambda 1.0 \
+#    --eet-detach-aux-from-backbone 1
 
 # ============================================================================
 # BACKBONE GRADIENT ISOLATION — Detach Exit Representations
@@ -728,55 +728,55 @@ run_experiment "EET_P1_DETACH_AUX_D${DEPTH}" \
 # so it only trains from final-layer tokens (clean dense-like objective).
 
 # Detach exits at 10% active (aggressive exits, maximum compute savings)
-run_experiment "EET_P1_DETACH_EXIT_D${DEPTH}" \
-    "Detach exit from backbone (10% active)" \
-    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
-    --eet-router-type mlp1 \
-    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
-    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
-    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
-    --eet-global-router 1 --eet-router-task-grad 1 \
-    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
-    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
-    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
-    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
-    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
-    --eet-capacity-alignment-lambda 1.0 \
-    --eet-detach-exit-from-backbone 1
+#run_experiment "EET_P1_DETACH_EXIT_D${DEPTH}" \
+#    "Detach exit from backbone (10% active)" \
+#    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
+#    --eet-router-type mlp1 \
+#    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
+#    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
+#    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
+#    --eet-global-router 1 --eet-router-task-grad 1 \
+#    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
+#    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
+#    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
+#    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
+#    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
+#    --eet-capacity-alignment-lambda 1.0 \
+#    --eet-detach-exit-from-backbone 1
 
 # Detach exits at 30% active (more backbone signal, still good compute savings)
-run_experiment "EET_P1_DETACH_EXIT_30_D${DEPTH}" \
-    "Detach exit from backbone (30% active)" \
-    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
-    --eet-router-type mlp1 \
-    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
-    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
-    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
-    --eet-global-router 1 --eet-router-task-grad 1 \
-    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
-    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
-    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.30 \
-    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
-    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
-    --eet-capacity-alignment-lambda 1.0 \
-    --eet-detach-exit-from-backbone 1
+#run_experiment "EET_P1_DETACH_EXIT_30_D${DEPTH}" \
+#    "Detach exit from backbone (30% active)" \
+#    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
+#    --eet-router-type mlp1 \
+#    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
+#    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
+#    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
+#    --eet-global-router 1 --eet-router-task-grad 1 \
+#    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
+#    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
+#    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.30 \
+#    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
+#    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
+#    --eet-capacity-alignment-lambda 1.0 \
+#    --eet-detach-exit-from-backbone 1
 
 # Detach exits at 50% active (most backbone signal, moderate compute savings)
-run_experiment "EET_P1_DETACH_EXIT_50_D${DEPTH}" \
-    "Detach exit from backbone (50% active)" \
-    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
-    --eet-router-type mlp1 \
-    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
-    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
-    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
-    --eet-global-router 1 --eet-router-task-grad 1 \
-    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
-    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
-    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.50 \
-    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
-    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
-    --eet-capacity-alignment-lambda 1.0 \
-    --eet-detach-exit-from-backbone 1
+#run_experiment "EET_P1_DETACH_EXIT_50_D${DEPTH}" \
+#    "Detach exit from backbone (50% active)" \
+#    --use-eet 1 --eet-frozen-kv 0 --eet-reenter-final 0 \
+#    --eet-router-type mlp1 \
+#    --eet-warmup-frac 0.0 --eet-explore-frac 0.0 \
+#    --eet-exit-adapter-rank 0 --eet-router-after-block 0 \
+#    --eet-loss-variant ce_guided --eet-capacity-schedule bell \
+#    --eet-global-router 1 --eet-router-task-grad 1 \
+#    --eet-ce-guided-lambda 1.0 --eet-surprise-lambda 0.1 --eet-min-exit-layer 1\
+#    --eet-gumbel-temp-start 1.0 --eet-gumbel-temp-end 0.1 --eet-gumbel-hard 1 \
+#    --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.50 \
+#    --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
+#    --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
+#    --eet-capacity-alignment-lambda 1.0 \
+#    --eet-detach-exit-from-backbone 1
 
 # Run diagnostic comparison if both completed
 DENSE_CKPT="${EET_OUT_BASE}/EET_P1_DIAG_DENSE_D${DEPTH}/depth_${DEPTH}/ckpt_base/base"
