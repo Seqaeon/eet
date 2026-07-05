@@ -642,9 +642,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 # Trains a dense baseline and the clean EET baseline, then runs the
 # diagnostic comparison script automatically.
 
-run_experiment "EET_P1_DIAG_DENSE_D${DEPTH}" \
-    "Diagnostic: Dense baseline (control)" \
-    --use-eet 0
+#run_experiment "EET_P1_DIAG_DENSE_D${DEPTH}" \
+#    "Diagnostic: Dense baseline (control)" \
+#    --use-eet 0
 
 run_experiment "EET_P1_DIAG_EET_D${DEPTH}" \
     "Diagnostic: EET baseline (P1_22 config)" \
