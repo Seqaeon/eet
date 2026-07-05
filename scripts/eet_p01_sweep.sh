@@ -105,7 +105,7 @@ init_state
 # Uses the standard base dense model's Chinchilla-ratio token count.
 # --target-param-data-ratio 10.5 with --target-tokens 0 makes base_train.py
 # compute num_iterations from the base GPT param count at this depth.
-EET_COMMON="--models base \
+EET_COMMON="--models eet \
   --device-batch-size ${DEVICE_BATCH_SIZE:-128} --total-batch-size -1 \
   --use-onecycle 0 --log-every 200 --skip-core \
   --data-dir ${DATA_DIR:-data} --tokenizer-dir ${TOKENIZER_DIR:-tokenizer} \
