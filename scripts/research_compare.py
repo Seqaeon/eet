@@ -432,6 +432,40 @@ def run_training_sweep(args):
         common_args.extend(["--data-dir", args.data_dir])
     if getattr(args, "max_shards", -1) != -1:
         common_args.extend(["--max-shards", str(args.max_shards)])
+
+    # Filter common_args to exclude legacy research parameters from command line printout and execution
+    clean_common_args = []
+    i = 0
+    while i < len(common_args):
+        arg = common_args[i]
+        if arg.startswith('--'):
+            is_eet = arg.startswith('--eet-') or arg == '--use-eet'
+            is_standard = arg in {
+                '--depth', '--aspect-ratio', '--head-dim', '--model-dim', '--max-seq-len', 
+                '--device-batch-size', '--total-batch-size', '--target-tokens', '--target-param-data-ratio', 
+                '--eval-every', '--log-every', '--core-metric-every', '--save-every', '--warmup-ratio', 
+                '--warmdown-ratio', '--final-lr-frac', '--adam-beta2', '--research-warmup-ratio', 
+                '--use-onecycle', '--router-context-window', '--compile', '--no-compile', '--fp8', 
+                '--tokenizer-dir', '--data-dir', '--max-shards', '--checkpoints-dir', '--model-tag', 
+                '--resume-from-step', '--disable-mu-p', '--mu-p-scale-override'
+            }
+            if is_eet or is_standard:
+                clean_common_args.append(arg)
+                if i + 1 < len(common_args) and not common_args[i + 1].startswith('--'):
+                    clean_common_args.append(common_args[i + 1])
+                    i += 2
+                else:
+                    i += 1
+            else:
+                if i + 1 < len(common_args) and not common_args[i + 1].startswith('--'):
+                    i += 2
+                else:
+                    i += 1
+        else:
+            clean_common_args.append(arg)
+            i += 1
+    common_args = clean_common_args
+
     
     # --- Optimal LR Configurations (from actual_lr_research_sweep) ---
     BEST_LRS = {
