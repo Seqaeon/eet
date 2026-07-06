@@ -674,7 +674,7 @@ run_experiment "EET_P1_DIAG_EET_D${DEPTH}" \
     --eet-depth-weight-type ema --eet-compute-skip 1 --eet-target-active-frac 0.10 \
     --eet-reinforce-interval 0 --eet-reinforce-lambda 0.0 \
     --eet-ffn-skip 0 --eet-ffn-target-frac 0.00 --eet-model-lr-mult 1.0 --eet-router-lr-mult 1.0\
-    --eet-capacity-alignment-lambda 1.0
+    --eet-capacity-alignment-lambda 0.0
 
 
 # ============================================================================
